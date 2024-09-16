@@ -1,0 +1,180 @@
+/* hero section */
+.hero-section {
+  background-image: url('https://b.zmtcdn.com/web_assets/81f3ff974d82520780078ba1cfbd453a1583259680.png');
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+}
+
+.search-bar input {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 15px;
+  font-size: 1.2rem;
+}
+
+
+/* nav bar */
+/* Simple navbar styling */
+.navbar-brand {
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  font-size: 1.1rem;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: #dc3545 !important;
+}
+
+
+/* navbar 2  */
+/* Make the navbar sticky */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Scrollable Navbar */
+.scrollable-navbar {
+  display: flex;
+  white-space: nowrap;
+  overflow-x: auto;
+  /* Enables horizontal scrolling */
+  scrollbar-width: none;
+  /* For Firefox, hides the scrollbar */
+}
+
+/* Hide scrollbar in WebKit browsers */
+.scrollable-navbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Links inside the navbar */
+.scrollable-navbar .nav-item {
+  flex-shrink: 0;
+}
+
+.scrollable-navbar .nav-link {
+  padding: 0.5rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.scrollable-navbar .nav-link:hover {
+  color: #ff6347;
+}
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    margin-right: 20px;
+  }
+
+  .scrollable-navbar {
+    padding-left: 0.5rem;
+  }
+
+  .scrollable-navbar .nav-link {
+    padding: 0.5rem 1rem;
+    /* Smaller padding on mobile */
+  }
+}
+
+
+/* scrollbar */
+/* Apply custom scrollbar styles to the entire page */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #ff6347 #f1f1f1;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 12px;
+  /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* Background of the scrollbar track */
+  border-radius: 10px;
+  /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ff6347;
+  /* Color of the scrollbar handle */
+  border-radius: 10px;
+  /* Rounded scrollbar handle */
+  border: 3px solid #f1f1f1;
+  /* Padding between scrollbar and track */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ff4500;
+  /* Darker color on hover */
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #ff4500;
+  /* Even darker color when active (clicked) */
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+
+
+/* Navbar brand styling */
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #dc3545;
+  /* Bootstrap danger color */
+  transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: #c82333;
+  /* Darker red for hover */
+}
+
+/* Navbar links styling */
+.nav-link {
+  font-size: 1.1rem;
+  margin-right: 15px;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #dc3545;
+  text-decoration: underline;
+  /* Red on hover */
+}
+
+/* Adjust spacing and responsiveness */
+.navbar-nav {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-item {
+  margin-left: 20px;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+/* Navbar scroll for long menus */
+.navbar-nav-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
