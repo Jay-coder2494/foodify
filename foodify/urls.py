@@ -2,6 +2,7 @@
 from django.urls import path
 from .views import *
 
+
 urlpatterns = [
     path('', HelloWorldView.as_view(), name='hello-world'),
     path('api/send-otp/', send_otp, name='send-otp'),
