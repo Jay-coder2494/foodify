@@ -23,6 +23,7 @@ class HelloWorldView(APIView):
         return Response({"message": "jay shree krishna!"}, status=status.HTTP_200_OK)
 
 
+
 @csrf_exempt
 def send_otp(request):
     if request.method == "POST":
