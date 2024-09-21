@@ -22,8 +22,14 @@ const RestaurantCategories = () => {
     else if (cat === "Gujrati") {
       navigate("/gujrati");
     }
-    else if(cat === "Desserts"){
+    else if (cat === "Desserts") {
       navigate("/desert")
+    }
+    else if (cat === "Thali") {
+      navigate("/thali");  // Add Thali redirection
+    }
+    else if (cat === "South-indian") {
+      navigate("/south")
     }
     // You can add more else-if conditions for other categories (e.g., "Gujrati", "Desserts", etc.)
   }

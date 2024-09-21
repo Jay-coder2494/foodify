@@ -14,10 +14,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from .models import (Pizza , Burgers, Gujrati, Desert )
+from .models import *
 
-
-from .serializer import  (PizzaItemSerializer, BurgersItemSerializer, GujratiItemSerializer, DesertItemSerializer)
+from .serializer import *
 
 # serializeer
 
@@ -32,9 +31,10 @@ class SampleView(APIView):
         data = {
             "pizza-api": f"{self.x}api/pizza/",
             "burger-api": f"{self.x}api/burger/",
-            "gujrati-api":f"{self.x}api/gujrati/",
-            "desert-api":f"{self.x}api/desert/",
-
+            "gujrati-api": f"{self.x}api/gujrati/",
+            "desert-api": f"{self.x}api/desert/",
+            "Thali-api": f"{self.x}api/thali/",
+            "south-api": f"{self.x}api/south/",
         }
         return Response(data)
 
@@ -51,7 +51,6 @@ class PizzaAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 
 class BurgersAPIView(APIView):
@@ -66,7 +65,7 @@ class BurgersAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 class GujratiAPIView(APIView):
     def get(self, request):
@@ -80,7 +79,8 @@ class GujratiAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class DesertAPIView(APIView):
     def get(self, request):
         items = Desert.objects.all()
@@ -89,6 +89,34 @@ class DesertAPIView(APIView):
 
     def post(self, request):
         serializer = DesertItemSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ThaliAPIView(APIView):
+    def get(self, request):
+        items = Thali.objects.all()
+        serializer = ThaliSerializer(items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ThaliSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SouthAPIView(APIView):
+    def get(self, request):
+        items = South.objects.all()
+        serializer = SouthItemSerializer(items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = SouthItemSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -189,3 +217,42 @@ def check_authentication(request):
         return JsonResponse(
             {"status": "error", "message": "User is not authenticated."}, status=401
         )
+
+
+# for add to cart
+
+
+# cart data rest framework(get, post, delete)
+class CartAPIView(APIView):
+    # get cart data
+    def get(self, request):
+        user_id = request.query_params.get("user_id")
+
+        if not user_id:
+            return Response(
+                {"error": "user_id parameter is required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            cart_items = Cart.objects.filter(user_id=user_id)
+            serializer = CartItemSerializer(cart_items, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    # save to cart model
+    def post(self, request, item_id):
+        try:
+            cart_item = Cart.objects.get(id=item_id)
+
+            # Update the ordered status to True
+            cart_item.ordered = True
+            cart_item.save()
+            print(cart_item)
+            return JsonResponse(
+                {"message": "Order confirmed successfully!"}, status=200
+            )
+        except Cart.DoesNotExist:
+            return JsonResponse({"error": "Cart item not found"}, status=404)

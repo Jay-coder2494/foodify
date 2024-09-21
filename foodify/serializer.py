@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import (Pizza, Burgers, Gujrati, Desert)
+from .models import *
 
 
 class PizzaItemSerializer(serializers.ModelSerializer):
@@ -23,3 +23,23 @@ class DesertItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desert
         fields = "__all__"
+
+
+
+class ThaliSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Thali
+        fields = "__all__"
+
+class SouthItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = South
+        fields = "__all__"
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = "__all__"
+
+

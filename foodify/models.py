@@ -7,6 +7,7 @@ from django.contrib.auth.models import (
 from django.utils import timezone
 import random
 import string
+from django.conf import settings
 
 
 # Create your models here.
@@ -64,6 +65,10 @@ class Pizza(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     time = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.title} :: {self.price}"
+
+
 class Burgers(models.Model):
     image = models.URLField()
     title = models.CharField(max_length=100)
@@ -72,7 +77,11 @@ class Burgers(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     time = models.CharField(max_length=100)
 
-# create a new model for Gujrati 
+    def __str__(self):
+        return f"{self.title} :: {self.price}"
+
+
+# create a new model for Gujrati
 class Gujrati(models.Model):
     image = models.URLField()
     title = models.CharField(max_length=100)
@@ -80,6 +89,9 @@ class Gujrati(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     time = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.title} :: {self.price}"
 
 
 class Desert(models.Model):
@@ -90,6 +102,40 @@ class Desert(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     time = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.title} :: {self.price}"
+
+
+class Thali(models.Model):
+    image = models.URLField()
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
+    time = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.title} :: {self.price}"
+
+
+class South(models.Model):
+    image = models.URLField()
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
+    time = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.title} :: {self.price}"
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    cart_details = models.JSONField()  # Store cart items in JSON format
+    ordered = models.BooleanField(default=False)  # Status of the order
+    last_updated = models.DateTimeField(auto_now=True)  # Auto update on every save
+    email = models.EmailField()  # User's email
+
+    def __str__(self):
+        return f"Cart for {self.id} ({self.user.my_username}) {self.user.first_name} {self.user.last_name} {self.user.phone} - [{'Ordered' if self.ordered else 'Pending'}] {self.last_updated}"

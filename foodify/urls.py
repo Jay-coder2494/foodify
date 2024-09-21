@@ -10,6 +10,9 @@ urlpatterns = [
     path("api/burger/", BurgersAPIView.as_view(), name="burger-api"),
     path("api/gujrati/", GujratiAPIView.as_view(), name="gujrati-api"),
     path("api/desert/", DesertAPIView.as_view(), name="desert-api"),
+    path("api/thali/", ThaliAPIView.as_view(), name="thali-api"),
+    path("api/south/", SouthAPIView.as_view(), name="thali-api"),
+    
 
     # other
     path("api/send-otp/", send_otp, name="send-otp"),
