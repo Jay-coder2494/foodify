@@ -54,3 +54,23 @@ class UserData(AbstractBaseUser, PermissionsMixin):
         if not self.pk:  # if it's a new instance
             self.otp = "".join(random.choices(string.digits, k=6))
         super().save(*args, **kwargs)
+
+
+class Pizza(models.Model):
+    image = models.URLField()
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
+    time = models.CharField(max_length=100)
+
+class Burgers(models.Model):
+    image = models.URLField()
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
+    time = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.title} :: {self.price}"

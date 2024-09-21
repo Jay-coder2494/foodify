@@ -14,14 +14,55 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from .models import (Pizza , Burgers )
+
+
+from .serializer import  (PizzaItemSerializer, BurgersItemSerializer)
+
+# serializeer
+
 
 User = get_user_model()
 
 
-class HelloWorldView(APIView):
-    def get(self, request):
-        return Response({"message": "jay shree krishna!"}, status=status.HTTP_200_OK)
+class SampleView(APIView):
+    x = "http://127.0.0.1:8000/"
 
+    def get(self, request):
+        data = {
+            "pizza-api": f"{self.x}api/pizza/",
+            "burger-api": f"{self.x}api/burger/",
+        }
+        return Response(data)
+
+
+class PizzaAPIView(APIView):
+    def get(self, request):
+        pizza_items = Pizza.objects.all()
+        serializer = PizzaItemSerializer(pizza_items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PizzaItemSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class BurgersAPIView(APIView):
+    def get(self, request):
+        items = Burgers.objects.all()
+        serializer = BurgersItemSerializer(items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = BurgersItemSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
