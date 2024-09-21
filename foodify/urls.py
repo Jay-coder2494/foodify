@@ -8,6 +8,8 @@ urlpatterns = [
     # food
     path("api/pizza/", PizzaAPIView.as_view(), name="pizza-api"),
     path("api/burger/", BurgersAPIView.as_view(), name="burger-api"),
+    path("api/gujrati/", GujratiAPIView.as_view(), name="gujrati-api"),
+    path("api/desert/", DesertAPIView.as_view(), name="desert-api"),
 
     # other
     path("api/send-otp/", send_otp, name="send-otp"),

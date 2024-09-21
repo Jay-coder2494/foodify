@@ -14,10 +14,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from .models import (Pizza , Burgers )
+from .models import (Pizza , Burgers, Gujrati, Desert )
 
 
-from .serializer import  (PizzaItemSerializer, BurgersItemSerializer)
+from .serializer import  (PizzaItemSerializer, BurgersItemSerializer, GujratiItemSerializer, DesertItemSerializer)
 
 # serializeer
 
@@ -32,6 +32,9 @@ class SampleView(APIView):
         data = {
             "pizza-api": f"{self.x}api/pizza/",
             "burger-api": f"{self.x}api/burger/",
+            "gujrati-api":f"{self.x}api/gujrati/",
+            "desert-api":f"{self.x}api/desert/",
+
         }
         return Response(data)
 
@@ -59,6 +62,33 @@ class BurgersAPIView(APIView):
 
     def post(self, request):
         serializer = BurgersItemSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class GujratiAPIView(APIView):
+    def get(self, request):
+        items = Gujrati.objects.all()
+        serializer = GujratiItemSerializer(items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = GujratiItemSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class DesertAPIView(APIView):
+    def get(self, request):
+        items = Desert.objects.all()
+        serializer = DesertItemSerializer(items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = DesertItemSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -19,8 +19,14 @@ const RestaurantCategories = () => {
     } else if (cat === "Burgers") {
       navigate("/burger");
     }
+    else if (cat === "Gujrati") {
+      navigate("/gujrati");
+    }
+    else if(cat === "Desserts"){
+      navigate("/desert")
+    }
     // You can add more else-if conditions for other categories (e.g., "Gujrati", "Desserts", etc.)
-  };
+  }
 
   return (
     <div className="container my-5">

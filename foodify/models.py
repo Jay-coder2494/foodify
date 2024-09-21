@@ -72,5 +72,24 @@ class Burgers(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=1)
     time = models.CharField(max_length=100)
 
+# create a new model for Gujrati 
+class Gujrati(models.Model):
+    image = models.URLField()
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
+    time = models.CharField(max_length=100)
+
+
+class Desert(models.Model):
+    image = models.URLField()
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    rating = models.DecimalField(max_digits=3, decimal_places=1)
+    time = models.CharField(max_length=100)
+
+
     def __str__(self):
         return f"{self.title} :: {self.price}"
