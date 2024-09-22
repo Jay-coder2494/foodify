@@ -12,13 +12,16 @@ urlpatterns = [
     path("api/desert/", DesertAPIView.as_view(), name="desert-api"),
     path("api/thali/", ThaliAPIView.as_view(), name="thali-api"),
     path("api/south/", SouthAPIView.as_view(), name="thali-api"),
-    
-
+    path("api/cart/", get_cart_items, name="cart-api"),
+    path("api/remove-cart/", remove_from_cart, name="remove-from-cart"),
+    path("api/confirm/", confirm_order, name="confirm_order"),
+    path("api/add_to_cart/", add_to_cart, name="cart-api"),
     # other
     path("api/send-otp/", send_otp, name="send-otp"),
     path("api/verify-otp/", verify_otp, name="verify-otp"),
     path(
         "api/check-authentication/", check_authentication, name="check-authentication"
     ),
+    path("api/final-orders/", get_final_orders, name="get-final-orders"),
+    path("api/logout/", logout_view, name="logout"),
 ]
-

@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import Login from "./user/Login";
 import axios from 'axios';
 import API_BASE_URL from "../config"
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+
 axios.defaults.withCredentials = true;
 
 
@@ -32,7 +35,35 @@ const Navbar = () => {
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+  const navigate = useNavigate();
 
+
+  const handleLogout = async () => {
+    let asklogout = window.confirm("Do you want to logout?")
+    if (asklogout) {
+      try {
+        const csrfToken = Cookies.get('csrftoken');  // Get CSRF token from cookies
+        const response = await axios.post(
+          `${API_BASE_URL}/logout/`,
+          {},
+          {
+            withCredentials: true,
+            headers: {
+              'X-CSRFToken': csrfToken,  // Include CSRF token in headers
+            },
+          }
+        );
+        console.log(response.data.message); // Log success message
+        setUserData(null); // Clear user data
+        navigate('/');
+      } catch (err) {
+        console.error('Error logging out:', err);
+      }
+      finally {
+        window.location.reload()
+      }
+    }
+  };
 
   return (
     <>
@@ -100,11 +131,11 @@ const Navbar = () => {
                       About Us
                     </Link>
                   </li>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <Link className="nav-link" to="/contact">
                       Contact Us
                     </Link>
-                  </li>
+                  </li> */}
                   <li className="nav-item">
                     <Link className="nav-link" to="/menu">
                       Menu
@@ -119,6 +150,11 @@ const Navbar = () => {
                     <Link className="nav-link" to="/reviews">
                       Reviews
                     </Link>
+                  </li>
+                  <li className="nav-item">
+                    <button className="nav-link" onClick={handleLogout}>
+                      Logout
+                    </button>
                   </li>
                 </ul>
               </div>

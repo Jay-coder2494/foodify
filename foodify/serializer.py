@@ -19,11 +19,11 @@ class GujratiItemSerializer(serializers.ModelSerializer):
         model = Gujrati
         fields = "__all__"
 
+
 class DesertItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Desert
         fields = "__all__"
-
 
 
 class ThaliSerializer(serializers.ModelSerializer):
@@ -31,15 +31,21 @@ class ThaliSerializer(serializers.ModelSerializer):
         model = Thali
         fields = "__all__"
 
+
 class SouthItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = South
         fields = "__all__"
 
 
-class CartItemSerializer(serializers.ModelSerializer):
+class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
-        fields = "__all__"
-
-
+        fields = [
+            "id",
+            "user",
+            "cart_details",
+            "last_updated",
+            "quantity",
+        ]
+        read_only_fields = ["user", "last_updated"]

@@ -6,7 +6,7 @@ const RestaurantCategories = () => {
 
   const categories = [
     { name: "Pizza", imgUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHx8fDA%3D" },
-    { name: "Burgers", imgUrl: "https://b.zmtcdn.com/data/dish_photos/190/9d63666b7e22f117989c535cad8fb190.jpg" },
+    { name: "Burgers", imgUrl: "https://plus.unsplash.com/premium_photo-1661387558893-63d24776cf38?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGJ1cmdlcnxlbnwwfHwwfHx8MA%3D%3D" },
     { name: "Gujrati", imgUrl: "https://images.unsplash.com/photo-1645432524528-ae76145f67b0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGd1amFyYXRpJTIwZGVzaGVzfGVufDB8fDB8fHww" },
     { name: "Desserts", imgUrl: "https://b.zmtcdn.com/data/dish_photos/ab4/a266bf78389da2ff0f6790798aadaab4.jpeg" },
     { name: "Thali", imgUrl: "https://b.zmtcdn.com/data/dish_photos/de1/dea2d32a045598c69cf8289e70c94de1.jpg" },
@@ -40,6 +40,7 @@ const RestaurantCategories = () => {
       <div className="row">
         {categories.map((category, index) => (
           <div className="col-md-4 mb-3" key={index}>
+            
             <div className="card">
               <img src={category.imgUrl} className="card-img-top img-fluid" alt={category.name} />
               <div className="card-body text-center">

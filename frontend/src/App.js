@@ -7,6 +7,9 @@ import Gujrati from './components/Gujrati';
 import Dessert from './components/Deserts';
 import Thali from './components/Thali'
 import SouthIndian from './components/south';
+import Aboutus from './components/About';
+import Navbar from './components/Navbar';
+import Cart from './components/Cart';
 
 function App() {
   return (
@@ -14,12 +17,24 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="pizza" element={<Pizza />} />
-          <Route path="burger" element={<Burger />} />
-          <Route path="gujrati" element={<Gujrati />} />
-          <Route path="Desert" element={<Dessert />} />
+          <Route path="/pizza" element={<Pizza />} />
+          <Route path="/burger" element={<Burger />} />
+          <Route path="/gujrati" element={<Gujrati />} />
+          <Route path="/desert" element={<Dessert />} />
           <Route path="/thali" element={<Thali />} />
           <Route path="/south" element={<SouthIndian />} />
+          <Route path="/about" element={
+            <>
+              <Navbar />
+              <Aboutus />
+            </>
+          } />
+          <Route path="/cart" element={
+            <>
+              <Navbar />
+              <Cart />
+            </>
+          } />
 
           {/* <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />

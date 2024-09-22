@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config";
+import Navbar from "./Navbar";
 
 const Dessert = () => {
   const [desserts, setDesserts] = useState([]);
@@ -8,7 +9,7 @@ const Dessert = () => {
   const [userData, setUserData] = useState(null);
 
   const [cartItems, setCartItems] = useState([]);
-  const [userId, setUserId] = useState(1); // Use the actual user ID here
+  const userId = userData?.data?.id;
 
   useEffect(() => {
     const fetchCartData = async () => {
@@ -45,26 +46,60 @@ const Dessert = () => {
       });
   }, []);
 
+
+  const addToCart = (dish) => {
+    console.log(dish, userId);
+
+    axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
+      cart_details: dish,
+      quantity: 1,
+      user_id: userId,
+    })
+      .then(response => {
+        console.log('Item added to cart successfully', response.data);
+        alert('Item added to cart!');
+      })
+      .catch(error => {
+        console.error('Error adding item to cart:', error);
+      });
+  };
+
+
   return (
-    <div className="container my-5">
-      <h2 className="mb-4">Dessert Menu</h2>
-      <div className="row">
-        {desserts.map((dessert, index) => (
-          <div className="col-md-4 mb-3" key={index}>
-            <div className="card">
-              <img src={dessert.image} className="card-img-top img-fluid" alt={dessert.title} />
-              <div className="card-body text-center">
-                <h5 className="card-title">{dessert.title}</h5>
-                <p>{dessert.text}</p>
-                <p>Price: {dessert.price}</p>
-                <p>Rating: {dessert.rating}/5</p>
-                <p>Preparation time: {dessert.time}</p>
+    <>
+      <Navbar />
+      <div className="container my-5">
+        <h2 className="mb-4">Dessert Menu</h2>
+        <div className="row">
+          {desserts.map((dessert, index) => (
+            <div className="col-md-4 col-sm-6 mb-4" key={index}>
+              <div className="card h-100">
+                <img
+                  src={dessert.image}
+                  className="card-img-top img-fluid"
+                  alt={dessert.title}
+                  style={{ height: "200px", objectFit: "cover" }} />
+                <div className="card-body text-center">
+                  <h5 className="card-title">{dessert.title}</h5>
+                  <p className="card-text">{dessert.text}</p>
+                  <p><strong>Price:</strong> {dessert.price}</p>
+                  <p><strong>Rating:</strong> {dessert.rating}/5</p>
+                  <p><strong>Preparation time:</strong> {dessert.time}</p>
+                </div>
+                <div className="text-center">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => addToCart(dessert)}  // Pass the dish object to addToCart function
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

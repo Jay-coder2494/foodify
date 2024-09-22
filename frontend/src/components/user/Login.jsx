@@ -56,6 +56,8 @@ export default function Login() {
             }
         } catch (error) {
             setError('Invalid OTP');
+        } finally {
+            window.location.reload()
         }
     };
 

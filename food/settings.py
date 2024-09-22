@@ -149,6 +149,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React app URL
 ]
+# Add localhost:3000 to CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
 # Allow credentials (cookies, headers, etc.)
 CORS_ALLOW_CREDENTIALS = True
@@ -158,6 +160,8 @@ AUTHENTICATION_BACKENDS = [
     "foodify.backends.OTPBackend",
     "django.contrib.auth.backends.ModelBackend",  # keep the default backend as a fallback
 ]
+# settings.py
+CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict'
 
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"  # Use database-backed sessions

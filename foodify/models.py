@@ -81,7 +81,6 @@ class Burgers(models.Model):
         return f"{self.title} :: {self.price}"
 
 
-# create a new model for Gujrati
 class Gujrati(models.Model):
     image = models.URLField()
     title = models.CharField(max_length=100)
@@ -133,9 +132,23 @@ class South(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     cart_details = models.JSONField()  # Store cart items in JSON format
-    ordered = models.BooleanField(default=False)  # Status of the order
+    ordered = models.BooleanField(default=False)  # Track whether the item is ordered
     last_updated = models.DateTimeField(auto_now=True)  # Auto update on every save
-    email = models.EmailField()  # User's email
+    quantity = models.PositiveIntegerField(default=1)  # Quantity of the food item
 
     def __str__(self):
-        return f"Cart for {self.id} ({self.user.my_username}) {self.user.first_name} {self.user.last_name} {self.user.phone} - [{'Ordered' if self.ordered else 'Pending'}] {self.last_updated}"
+        return f"Cart for {self.id} - {self.last_updated}"
+
+
+class FinalOrders(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    item_id = models.IntegerField()  # Storing the ID of the item ordered
+    order_details = models.JSONField()  # Store detailed cart info (JSON structure)
+    phone = models.CharField(max_length=15, blank=True)
+    ordered_at = models.DateTimeField(auto_now_add=True)
+    payment_status = models.CharField(max_length=50, default="Pending")
+    order_status = models.CharField(max_length=50, default="Confirmed")
+    quantity = models.PositiveIntegerField(default=1, blank=True)
+
+    def __str__(self):
+        return f"Order {self.id} by {self.user}"

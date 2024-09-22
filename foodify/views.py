@@ -17,6 +17,7 @@ from django.utils import timezone
 from .models import *
 
 from .serializer import *
+from rest_framework.decorators import api_view, permission_classes
 
 # serializeer
 
@@ -35,6 +36,7 @@ class SampleView(APIView):
             "desert-api": f"{self.x}api/desert/",
             "Thali-api": f"{self.x}api/thali/",
             "south-api": f"{self.x}api/south/",
+            "cart-api": f"{self.x}api/cart/",
         }
         return Response(data)
 
@@ -220,39 +222,155 @@ def check_authentication(request):
 
 
 # for add to cart
+from rest_framework.permissions import IsAuthenticated
 
 
-# cart data rest framework(get, post, delete)
-class CartAPIView(APIView):
-    # get cart data
-    def get(self, request):
-        user_id = request.query_params.get("user_id")
+@api_view(["GET"])
+@csrf_exempt
+def get_cart_items(request):
+    user_id = request.query_params.get("user_id")  # Get user_id from query parameters
 
-        if not user_id:
-            return Response(
-                {"error": "user_id parameter is required"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        try:
-            cart_items = Cart.objects.filter(user_id=user_id)
-            serializer = CartItemSerializer(cart_items, many=True)
-            return Response(serializer.data)
-        except Exception as e:
-            return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+    if user_id:
+        carts = Cart.objects.filter(
+            user=user_id, ordered=False
+        )  # Filter cart items by user_id
+    else:
+        return Response(
+            {"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST
+        )
 
-    # save to cart model
-    def post(self, request, item_id):
-        try:
-            cart_item = Cart.objects.get(id=item_id)
+    serializer = CartSerializer(carts, many=True)  # Serialize the cart items
+    return Response(serializer.data, status=status.HTTP_200_OK)  # Retu
 
-            # Update the ordered status to True
-            cart_item.ordered = True
+
+@api_view(["POST"])
+@csrf_exempt
+def add_to_cart(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_id = data.get("user_id")
+        cart_details = data.get("cart_details")
+        quantity = data.get("quantity")
+
+        print(user_id)
+        user = User.objects.get(id=user_id)
+
+        print(user, cart_details, quantity)
+
+        # Check if the cart item already exists for the user
+        cart_item = Cart.objects.filter(user=user, cart_details=cart_details).first()
+
+        if cart_item:
+            # Item exists, update the quantity
+            cart_item.quantity += quantity
             cart_item.save()
-            print(cart_item)
-            return JsonResponse(
-                {"message": "Order confirmed successfully!"}, status=200
+            return Response({"message": "Quantity updated"}, status=status.HTTP_200_OK)
+        else:
+            # Item does not exist, create a new cart entry
+            Cart(user=user, cart_details=cart_details, quantity=quantity).save()
+            return Response(
+                {"message": "Added to cart"}, status=status.HTTP_201_CREATED
             )
-        except Cart.DoesNotExist:
-            return JsonResponse({"error": "Cart item not found"}, status=404)
+
+
+@api_view(["GET"])
+def get_final_orders(request):
+    try:
+        if request.user.is_authenticated:
+            # Fetch final orders for the authenticated user
+            orders = FinalOrders.objects.filter(
+                user=request.user
+            ).values()  # Use values() to return dictionaries
+            return Response(orders, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"error": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+# @csrf_exempt
+def remove_from_cart(request):
+    try:
+        # Extract item_id from the request body
+        item_id = request.data.get("item_id")
+
+        # Get the current authenticated user
+        user = request.user
+
+        # Check if the user is authenticated
+        if not user.is_authenticated:
+            return Response(
+                {"error": "User not authenticated"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Try to find the cart item based on item_id and user
+        cart_item = Cart.objects.get(id=item_id, user=user)
+
+        # Delete the cart item
+        cart_item.delete()
+
+        return Response(
+            {"message": "Item removed from cart"}, status=status.HTTP_200_OK
+        )
+
+    except Cart.DoesNotExist:
+        return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+def confirm_order(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            user_id = data.get("user_id")
+            print(user_id)
+
+            # Fetch user by user_id
+            user = User.objects.get(id=user_id)
+
+            # Fetch all cart items for this user that haven't been ordered yet
+            cart_items = Cart.objects.filter(user=user, ordered=False)
+
+            print(cart_items)
+
+            if not cart_items.exists():
+                return JsonResponse({"error": "No items to confirm"}, status=400)
+
+            # Confirm all cart items by creating FinalOrders
+            final_orders = []
+            for cart_item in cart_items:
+                final_order = FinalOrders.objects.create(
+                    user=user,
+                    item_id=cart_item.id,
+                    order_details=cart_item.cart_details,  # Assuming cart_details is JSON
+                    quantity=cart_item.quantity,
+                )
+                final_orders.append(final_order.id)
+
+                # Mark the cart item as ordered
+                cart_item.ordered = True
+                cart_item.save()
+            print(final_orders)
+
+            # Return success response with the list of confirmed orders
+            return JsonResponse(
+                {"success": True, "order_ids": final_orders}, status=201
+            )
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+
+@api_view(["POST"])
+@csrf_exempt
+def logout_view(request):
+    logout(request)
+    return Response({"message": "Successfully logged out"}, status=status.HTTP_200_OK)
