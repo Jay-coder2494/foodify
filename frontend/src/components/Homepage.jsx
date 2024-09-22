@@ -8,7 +8,6 @@ const Homepage = () => {
     <div>
       <Navbar />
 
-
       {/* hero section */}
       <div className="hero-section d-flex justify-content-center align-items-center">
         <div className="text-center">
@@ -21,14 +20,6 @@ const Homepage = () => {
                 </p>
               </div>
             </div>
-          </div>
-          <div className="search-bar mt-4">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search for restaurants or cuisines..."
-            />
-            <button className="btn btn-danger mt-3">Search</button>
           </div>
         </div>
       </div>

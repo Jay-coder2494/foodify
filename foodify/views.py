@@ -21,6 +21,7 @@ from rest_framework.decorators import api_view, permission_classes
 
 # serializeer
 
+from rest_framework.permissions import IsAuthenticated
 
 User = get_user_model()
 
@@ -222,7 +223,6 @@ def check_authentication(request):
 
 
 # for add to cart
-from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["GET"])
@@ -353,8 +353,8 @@ def confirm_order(request):
                 final_orders.append(final_order.id)
 
                 # Mark the cart item as ordered
-                cart_item.ordered = True
-                cart_item.save()
+                # cart_item.ordered = True
+                cart_item.delete()
             print(final_orders)
 
             # Return success response with the list of confirmed orders
@@ -367,6 +367,16 @@ def confirm_order(request):
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
 
+
+class SignUpView(APIView):
+    def post(self, request):
+        serializer = UserDataSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "User created successfully"}, status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])

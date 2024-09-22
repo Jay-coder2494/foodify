@@ -64,42 +64,51 @@ const Gujrati = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="container my-5">
-        <h2 className="mb-4 text-center">Gujrati Menu</h2>
-        <div className="row">
-          {gujratiDishes.map((dish, index) => (
-            <div className="col-md-4 col-sm-6 mb-4" key={index}>
-              <div className="card h-100">
-                <img
-                  src={dish.image}
-                  className="card-img img-fluid"
-                  alt={dish.title}
-                  style={{ height: "200px", objectFit: "cover" }}
-                />
-                <div className="card-body text-center">
-                  <h5 className="card-title">{dish.title}</h5>
-                  <p className="card-text">{dish.text}</p>
-                  <p><strong>Price:</strong> {dish.price}</p>
-                  <p><strong>Rating:</strong> {dish.rating}/5</p>
-                  <p><strong>Preparation time:</strong> {dish.time}</p>
-                </div>
-                <div className="text-center">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => addToCart(dish)}  // Pass the dish object to addToCart function
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+    <div className="container">
+      {/* Check if userData is null */}
+      {userData === null ? (
+        <div className="row justify-content-center">
+          <Navbar />
+          <h4 className="text-center mt-5">Please login first</h4>
         </div>
-      </div>
-    </>
-
+      ) : (
+        <>
+          <Navbar />
+          <div className="container my-5">
+            <h2 className="mb-4 text-center">Gujrati Menu</h2>
+            <div className="row">
+              {gujratiDishes.map((dish, index) => (
+                <div className="col-md-4 col-sm-6 mb-4" key={index}>
+                  <div className="card h-100">
+                    <img
+                      src={dish.image}
+                      className="card-img img-fluid"
+                      alt={dish.title}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                    <div className="card-body text-center">
+                      <h5 className="card-title">{dish.title}</h5>
+                      <p className="card-text">{dish.text}</p>
+                      <p><strong>Price:</strong> {dish.price}</p>
+                      <p><strong>Rating:</strong> {dish.rating}/5</p>
+                      <p><strong>Preparation time:</strong> {dish.time}</p>
+                    </div>
+                    <div className="text-center">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => addToCart(dish)}  // Pass the dish object to addToCart function
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

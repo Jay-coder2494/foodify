@@ -54,36 +54,46 @@ const Burger = () => {
 
 
   return (
-    <>
-      <Navbar />
-      <div className="container my-5">
-        <h2 className="mb-4">Burger Menu</h2>
-        <div className="row">
-          {burgers.map((burger, index) => (
-            <div className="col-md-4 mb-3" key={index}>
-              <div className="card">
-                <img src={burger.image} className="card-img-top" style={{ height: "100%", width: "100%" }} alt={burger.title} />
-                <div className="card-body text-center">
-                  <h5 className="card-title">{burger.title}</h5>
-                  <p>{burger.text}</p>
-                  <p>Price: {burger.price}</p>
-                  <p>Rating: {burger.rating}/5</p>
-                  <p>Preparation time: {burger.time}</p>
-                </div>
-                <div className="text-center">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => addToCart(burger)}  // Pass the dish object to addToCart function
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+    <div className="container">
+      {/* Check if userData is null */}
+      {userData === null ? (
+        <div className="row justify-content-center">
+          <Navbar />
+          <h4 className="text-center mt-5">Please login first</h4>
         </div>
-      </div>
-    </>
+      ) : (
+        <>
+          <Navbar />
+          <div className="container my-5">
+            <h2 className="mb-4">Burger Menu</h2>
+            <div className="row">
+              {burgers.map((burger, index) => (
+                <div className="col-md-4 mb-3" key={index}>
+                  <div className="card">
+                    <img src={burger.image} className="card-img-top" style={{ height: "100%", width: "100%" }} alt={burger.title} />
+                    <div className="card-body text-center">
+                      <h5 className="card-title">{burger.title}</h5>
+                      <p>{burger.text}</p>
+                      <p>Price: {burger.price}</p>
+                      <p>Rating: {burger.rating}/5</p>
+                      <p>Preparation time: {burger.time}</p>
+                    </div>
+                    <div className="text-center">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => addToCart(burger)}  // Pass the dish object to addToCart function
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

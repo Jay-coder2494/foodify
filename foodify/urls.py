@@ -24,4 +24,5 @@ urlpatterns = [
     ),
     path("api/final-orders/", get_final_orders, name="get-final-orders"),
     path("api/logout/", logout_view, name="logout"),
+    path("api/signup/", SignUpView.as_view(), name="signup"),
 ]

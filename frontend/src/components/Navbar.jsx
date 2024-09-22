@@ -8,7 +8,6 @@ import Cookies from 'js-cookie';
 
 axios.defaults.withCredentials = true;
 
-
 const Navbar = () => {
   const [login, setLogin] = useState(false)
   const [showModal, setShowModal] = useState(false);
@@ -86,7 +85,7 @@ const Navbar = () => {
 
                 <ul className="navbar-nav">
                   <li className="nav-item">
-                    <a className="nav-link" href="#">
+                    <a className="nav-link" href="/signup">
                       Sign up
                     </a>
                   </li>
@@ -131,24 +130,9 @@ const Navbar = () => {
                       About Us
                     </Link>
                   </li>
-                  {/* <li className="nav-item">
-                    <Link className="nav-link" to="/contact">
-                      Contact Us
-                    </Link>
-                  </li> */}
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/menu">
-                      Menu
-                    </Link>
-                  </li>
                   <li className="nav-item">
                     <Link className="nav-link" to="/cart">
                       Cart
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/reviews">
-                      Reviews
                     </Link>
                   </li>
                   <li className="nav-item">

@@ -87,9 +87,6 @@ export default function Cart() {
         if (userId) {
             fetchFinalOrders();
         }
-
-
-
     }, [navigate, userId]);
 
 
@@ -196,8 +193,8 @@ export default function Cart() {
                     </div>
                 )}
 
-
-                <h4 className='text-center text-warning'>Final Orders</h4>
+                <br />
+                <h4 className='text-center text-warning'>Previous Orders</h4>
 
                 <div className="row">
                     {finalOrders.map((order, index) => (

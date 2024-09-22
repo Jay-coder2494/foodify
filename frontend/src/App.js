@@ -10,6 +10,8 @@ import SouthIndian from './components/south';
 import Aboutus from './components/About';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
+import Signup from './components/user/Signup';
+import NoPage from './components/noPage';
 
 function App() {
   return (
@@ -35,6 +37,15 @@ function App() {
               <Cart />
             </>
           } />
+          <Route path="/signup" element={
+            <>
+              <Navbar />
+              <Signup />
+            </>
+          } />
+
+          <Route path="*" element={<NoPage />} />
+
 
           {/* <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
