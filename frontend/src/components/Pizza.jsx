@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./Navbar";
+import LoadingSpinner from "./LoadingSpinner";
 
 import API_BASE_URL from '../config';
 
@@ -8,24 +9,34 @@ import API_BASE_URL from '../config';
 const Pizza = () => {
   const [pizza, setPizzas] = useState([]);
   const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const userId = userData?.data?.id;
 
   useEffect(() => {
     // Fetch pizza data from Django API
-    axios.get("http://127.0.0.1:8000/api/pizza/")
-      .then((response) => {
+    const fetchPizzaData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await axios.get(`${API_BASE_URL}/pizza/`);
         setPizzas(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching pizza data:", error);
-      });
+        setError("Failed to load pizza data. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchPizzaData();
   }, []);
 
 
   const addToCart = (dish) => {
     console.log(dish, userId);
 
-    axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
+    axios.post(`${API_BASE_URL}/add_to_cart/`, {
       cart_details: dish,
       quantity: 1,
       user_id: userId,
@@ -65,8 +76,26 @@ const Pizza = () => {
           <Navbar />
           <div className="container my-5">
             <h2 className="mb-4 text-center">Pizza Menu</h2>
-            <div className="row">
-              {pizza.map((pizza, index) => (
+            
+            {/* Loading State */}
+            {isLoading && <LoadingSpinner message="Loading delicious pizzas..." />}
+            
+            {/* Error State */}
+            {error && (
+              <div className="alert alert-danger text-center" role="alert">
+                <strong>Oops!</strong> {error}
+                <button 
+                  className="btn btn-outline-danger btn-sm ms-2" 
+                  onClick={() => window.location.reload()}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+            
+            {/* Pizza Grid */}
+            {!isLoading && !error && (
+              <div className="row">{pizza.map((pizza, index) => (
                 <div className="col-md-4 col-sm-6 mb-4" key={index}>
                   <div className="card h-100">
                     <img

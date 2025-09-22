@@ -12,7 +12,7 @@ const SouthIndian = () => {
 
   useEffect(() => {
     // API call to fetch South Indian dish data from the Django backend
-    axios.get("http://127.0.0.1:8000/api/south/")
+    axios.get(`${API_BASE_URL}/south/`)
       .then(response => {
         setSouthIndianDishes(response.data);
       })
@@ -24,7 +24,7 @@ const SouthIndian = () => {
   const addToCart = (dish) => {
     console.log(dish, userId);
 
-    axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
+    axios.post(`${API_BASE_URL}/add_to_cart/`, {
       cart_details: dish,
       quantity: 1,
       user_id: userId,

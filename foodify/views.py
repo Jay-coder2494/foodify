@@ -17,6 +17,7 @@ from django.utils import timezone
 from .models import *
 
 from .serializer import *
+from .utils import create_standard_response, validate_required_fields
 from rest_framework.decorators import api_view, permission_classes
 
 # serializeer
@@ -27,17 +28,17 @@ User = get_user_model()
 
 
 class SampleView(APIView):
-    x = "http://127.0.0.1:8000/"
-
     def get(self, request):
+        # Use request.build_absolute_uri to get the current domain
+        base_url = request.build_absolute_uri('/api/')
         data = {
-            "pizza-api": f"{self.x}api/pizza/",
-            "burger-api": f"{self.x}api/burger/",
-            "gujrati-api": f"{self.x}api/gujrati/",
-            "desert-api": f"{self.x}api/desert/",
-            "Thali-api": f"{self.x}api/thali/",
-            "south-api": f"{self.x}api/south/",
-            "cart-api": f"{self.x}api/cart/",
+            "pizza-api": f"{base_url}pizza/",
+            "burger-api": f"{base_url}burger/",
+            "gujrati-api": f"{base_url}gujrati/",
+            "desert-api": f"{base_url}desert/",
+            "Thali-api": f"{base_url}thali/",
+            "south-api": f"{base_url}south/",
+            "cart-api": f"{base_url}cart/",
         }
         return Response(data)
 
@@ -246,16 +247,47 @@ def get_cart_items(request):
 @api_view(["POST"])
 @csrf_exempt
 def add_to_cart(request):
-    if request.method == "POST":
+    """
+    Add item to user's cart with improved error handling and validation
+    """
+    if request.method != "POST":
+        return create_standard_response(
+            "Method not allowed", 
+            status_code=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+    
+    try:
         data = json.loads(request.body)
+        
+        # Validate required fields
+        required_fields = ["user_id", "cart_details", "quantity"]
+        is_valid, missing_fields = validate_required_fields(data, required_fields)
+        
+        if not is_valid:
+            return create_standard_response(
+                f"Missing required fields: {', '.join(missing_fields)}",
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        
         user_id = data.get("user_id")
         cart_details = data.get("cart_details")
-        quantity = data.get("quantity")
+        quantity = data.get("quantity", 1)
+        
+        # Validate quantity is positive
+        if quantity <= 0:
+            return create_standard_response(
+                "Quantity must be a positive number",
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
 
-        print(user_id)
-        user = User.objects.get(id=user_id)
-
-        print(user, cart_details, quantity)
+        # Get user object
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return create_standard_response(
+                "User not found",
+                status_code=status.HTTP_404_NOT_FOUND
+            )
 
         # Check if the cart item already exists for the user
         cart_item = Cart.objects.filter(user=user, cart_details=cart_details).first()
@@ -264,13 +296,33 @@ def add_to_cart(request):
             # Item exists, update the quantity
             cart_item.quantity += quantity
             cart_item.save()
-            return Response({"message": "Quantity updated"}, status=status.HTTP_200_OK)
+            return create_standard_response(
+                "Cart quantity updated successfully",
+                {"item_id": cart_item.id, "new_quantity": cart_item.quantity}
+            )
         else:
             # Item does not exist, create a new cart entry
-            Cart(user=user, cart_details=cart_details, quantity=quantity).save()
-            return Response(
-                {"message": "Added to cart"}, status=status.HTTP_201_CREATED
+            new_cart_item = Cart.objects.create(
+                user=user, 
+                cart_details=cart_details, 
+                quantity=quantity
             )
+            return create_standard_response(
+                "Item added to cart successfully",
+                {"item_id": new_cart_item.id, "quantity": quantity},
+                status_code=status.HTTP_201_CREATED
+            )
+    
+    except json.JSONDecodeError:
+        return create_standard_response(
+            "Invalid JSON data",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    except Exception as e:
+        return create_standard_response(
+            f"An error occurred: {str(e)}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(["GET"])
