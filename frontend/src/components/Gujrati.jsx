@@ -25,7 +25,7 @@ const Gujrati = () => {
       });
 
     // API call to fetch Gujrati dishes data from the Django backend
-    axios.get("http://127.0.0.1:8000/api/gujrati/")
+    axios.get(`${API_BASE_URL}/gujrati/`)
       .then(response => {
         setGujratiDishes(response.data);
       })
@@ -49,7 +49,7 @@ const Gujrati = () => {
   const addToCart = (dish) => {
     console.log(dish, userId);
 
-    axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
+    axios.post(`${API_BASE_URL}/add_to_cart/`, {
       cart_details: dish,
       quantity: 1,
       user_id: userId,

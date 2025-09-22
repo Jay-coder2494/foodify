@@ -115,7 +115,7 @@ export default function Cart() {
         const ask_confirm = window.confirm("Do you want to confirm and process? After Confirm you cannot cancel it.");
         console.log(id);
         if (ask_confirm) {
-            axios.post(`http://127.0.0.1:8000/api/confirm/`, {
+            axios.post(`${API_BASE_URL}/confirm/`, {
                 user_id: id,
             }, { withCredentials: true })
                 .then(response => {

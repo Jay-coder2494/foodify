@@ -12,7 +12,7 @@ const Thali = () => {
 
   useEffect(() => {
     // API call to fetch thali data from the Django backend
-    axios.get("http://127.0.0.1:8000/api/thali/")
+    axios.get(`${API_BASE_URL}/thali/`)
       .then(response => {
         setThalis(response.data);
       })
@@ -25,7 +25,7 @@ const Thali = () => {
   const addToCart = (dish) => {
     console.log(dish, userId);
 
-    axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
+    axios.post(`${API_BASE_URL}/add_to_cart/`, {
       cart_details: dish,
       quantity: 1,
       user_id: userId,

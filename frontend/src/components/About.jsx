@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import API_BASE_URL from '../config';
 
 
 export default function Aboutus() {

@@ -13,7 +13,7 @@ const Burger = () => {
 
   useEffect(() => {
     // API call to fetch burger data from the Django backend
-    axios.get("http://127.0.0.1:8000/api/burger/")
+    axios.get(`${API_BASE_URL}/burger/`)
       .then(response => {
         setBurgers(response.data);
       })
@@ -38,7 +38,7 @@ const Burger = () => {
   const addToCart = (dish) => {
     console.log(dish, userId);
 
-    axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
+    axios.post(`${API_BASE_URL}/add_to_cart/`, {
       cart_details: dish,
       quantity: 1,
       user_id: userId,

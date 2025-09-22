@@ -14,7 +14,7 @@ const Dessert = () => {
   useEffect(() => {
     const fetchCartData = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/cart/?user_id=${userId}`);
+        const response = await axios.get(`${API_BASE_URL}/cart/?user_id=${userId}`);
         setCartItems(response.data);
       } catch (error) {
         console.error('Error fetching cart data:', error);
@@ -50,7 +50,7 @@ const Dessert = () => {
   const addToCart = (dish) => {
     console.log(dish, userId);
 
-    axios.post('http://127.0.0.1:8000/api/add_to_cart/', {
+    axios.post(`${API_BASE_URL}/add_to_cart/`, {
       cart_details: dish,
       quantity: 1,
       user_id: userId,
